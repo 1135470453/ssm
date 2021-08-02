@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.ZhichuRepository">
+    <insert id="insertZhichu">
+        insert into zhichu (money, type, person, time, zhichutime, other) VALUES (#{money},#{type},#{person},#{time},#{zhichutime},#{other});
+    </insert>
+    <insert id="insertchuxujilu">
+        insert into zhichu (money, type, person,  chuxutime,time, zhichutime, other) VALUES (#{money},#{type},#{person},#{chuxutime},#{time},#{zhichutime},#{other});
+    </insert>
+    <select id="getZhichuMonth" resultType="java.lang.Double" parameterType="String">
+        select sum(money) from zhichu where #{arg0} &lt;= zhichutime and zhichutime &lt;= #{arg1} and is_use = 1;
+    </select>
+    <select id="getpipizhichu" parameterType="String" resultType="com.entity.Zhichu">
+        select money,type,zhichutime,time,other from zhichu where person =0 and zhichutime like  CONCAT(#{date2},'%') and is_use = 1;
+    </select>
+    <select id="getOurChuxu" parameterType="String" resultType="com.entity.Zhichu">
+        select money,zhichutime,time,other from zhichu where chuxutime = #{arg0} and is_use = 1;
+    </select>
+    <select id="getbaicaizhichu" parameterType="String" resultType="com.entity.Zhichu">
+        select money,type,zhichutime,time,other from zhichu where person =1 and zhichutime like  CONCAT(#{date2},'%') and is_use = 1;
+    </select>
+    <select id="getZhichuByTime" parameterType="String" resultType="java.lang.Double">
+        select money from zhichu where time = #{arg0};
+    </select>
+    <update id="deleteBaicaiZhichu" parameterType="String">
+        update zhichu set is_use =0 where time = #{arg0};
+    </update>
+</mapper>

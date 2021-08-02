@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.CompanyRepository">
+    <select id="getNumberOfCity" resultType="com.entity.NumberOfCity">
+        select count(*) as number, city  from listed_company3 group by city order by number desc;
+    </select>
+    <select id="getCompany" resultType="com.entity.Company" parameterType="String">
+        select * from listed_company3 where serial_number between #{arg0} and #{arg1};
+    </select>
+    <select id="getCompanyByCode" resultType="com.entity.Company" parameterType="int">
+        select * from listed_company3 where stock_code = #{arg0};
+    </select>
+    <select id="getCompanyFinace" parameterType="String" resultType="com.entity.Finance">
+        select q,w,e,r,t,y,u,i,o from ${arg0} where MetricPerYear = #{arg1};
+    </select>
+</mapper>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.YueRepository">
+    <select id="getLastYue" resultType="java.lang.Double">
+        select money from yue order by id desc limit 1;
+    </select>
+    <insert id="insertYue">
+        insert into yue (money, time) VALUES (#{money},#{time});
+    </insert>
+</mapper>

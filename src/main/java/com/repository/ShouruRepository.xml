@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.ShouruRepository">
+    <insert id="insertShouru">
+        insert into shouru (money, type, person, time, shourutime, other) VALUES (#{money},#{type},#{person},#{time},#{shourutime},#{other});
+    </insert>
+    <select id="getShouruMonth" resultType="java.lang.Double" parameterType="String">
+        select sum(money) from shouru where #{arg0} &lt;= shourutime and shourutime &lt;= #{arg1} and is_use = 1;
+    </select>
+    <select id="getShouruByMonth" parameterType="String" resultType="com.entity.Shouru">
+        select money,type,person,time,shourutime,other from shouru where shourutime like  CONCAT(#{date3},'%') and is_use = 1;
+    </select>
+    <select id="getShouruByTime" parameterType="String" resultType="java.lang.Double">
+        select money from shouru where time = #{arg0};
+    </select>
+    <update id="deleteShouruByTime" parameterType="String">
+        update shouru set is_use = 0 where time = #{arg0};
+    </update>
+</mapper>

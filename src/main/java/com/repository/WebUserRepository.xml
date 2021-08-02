@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.WebUserRepository">
+    <select id="getPriviegeByIdAndPwd" resultType="java.lang.Integer" parameterType="String">
+        select privilege from webuser where id=#{arg0} and password = #{arg1};
+    </select>
+    <select id="getIdById" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from webuser where id = #{arg0};
+    </select>
+    <insert id="insetWebUser" parameterType="com.entity.WebUser">
+        insert into webuser (id, password,privilege ) values (#{id},#{password},#{privilege});
+    </insert>
+    <select id="getWebuser" resultType="com.entity.WebUser">
+        select * from webuser;
+    </select>
+    <select id="getWebuserByID" resultType="com.entity.WebUser">
+        select * from webuser where id like CONCAT('%',#{arg0},'%');
+    </select>
+    <delete id="deleteUserById" parameterType="String">
+        delete from webuser where id = #{arg0};
+    </delete>
+    <update id="updataUser" parameterType="String">
+        update webuser set id = #{arg0} , password = #{arg1}, privilege = #{arg2} where id = #{arg3};
+    </update>
+</mapper>

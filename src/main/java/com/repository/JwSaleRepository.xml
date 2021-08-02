@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repository.JwSaleRepository">
+    <insert id="insertSale">
+        insert into sale_record (name, sale_time, purchase, sale, remarks) VALUES (#{name},#{sale_time},#{purchase},#{sale},#{remarks});
+    </insert>
+    <select id="getsales" resultType="com.entity.JwSale" parameterType="String">
+        select * from sale_record where sale_time = #{arg0};
+    </select>
+    <delete id="deleteSaleById" parameterType="String">
+        delete from sale_record where id= #{arg0};
+    </delete>
+    <select id="getSaleByDay" parameterType="String" resultType="String">
+        select sum(sale) from sale_record where sale_time = #{arg0};
+    </select>
+    <select id="getSale2ByDay" parameterType="String" resultType="String">
+        select sum(purchase) from sale_record where sale_time = #{arg0};
+    </select>
+    <select id="getSaleByMonth" parameterType="String" resultType="String">
+        select sum(sale) from sale_record where sale_time like CONCAT(#{arg0},'%');
+    </select>
+    <select id="getSale2ByMonth" parameterType="String" resultType="String">
+        select sum(purchase) from sale_record where sale_time like CONCAT(#{arg0},'%');
+    </select>
+</mapper>
