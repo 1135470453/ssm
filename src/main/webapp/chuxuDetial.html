@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>心愿详情</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=no">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/account.css" rel="stylesheet">
+    <!-- 引入时间选择器 -->
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!--储蓄名称-->
+        <div class="row">
+            <div  class="col-xs-4 col-md-4">
+            </div>
+            <div class="col-md-4 col-xs-4">
+                <h4 id="name" name="name">成都成都</h4>
+            </div>
+            <div class="col-md-4 col-xs-4">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--记录储蓄-->
+        <div class="row">
+            <div  class="col-xs-4 col-md-4">
+            </div>
+            <div class="col-md-4 col-xs-4">
+                <button class="btn btn-primary" type="button" onclick="chuxu()">记储蓄</button>
+            </div>
+            <div class="col-md-4 col-xs-4">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--储蓄记录-->
+        <div class="row">
+            <div class="col-xs-2 col-md-2"></div>
+            <div class="col-md-10 col-xs-10">
+                <strong>储蓄记录</strong>
+            </div>
+        </div>
+        <div class="row">
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1"></div>
+            <div class="col-xs-10 col-md-10">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>金额</th>
+                        <th>时间</th>
+                        <th>备注</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="ourChuxuForm">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-1 col-md-1"></div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/layer/layer.js"></script>
+    <!--时间选择器-->
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                type: "GET",
+                url: "/ssm/account/getChuxuName",
+                success: function (data) {
+                    console.log(data.name);
+                    document.getElementById("name").innerText=data.name;
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+            getchuxujilu();
+        });
+        function getchuxujilu() {
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getOurChuxu",
+                success: function (data) {
+                    $("#ourChuxuForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#ourChuxuForm").append("<tr>" +
+                            "<td>"+item.money+"</td>"+
+                            "<td>"+item.zhichutime+"</td>"+
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary' onclick='deleteChuxuJilu(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function deleteChuxuJilu(temp) {
+            var item = JSON.parse(decodeURI(temp));
+            var time = item.time;
+            var money = item.money;
+            $.ajax({
+                type: "post",
+                url: "/ssm/account/deleteChuxuJilu?time="+time+"&money="+money,
+                success: function (data) {
+                    getchuxujilu();
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function chuxu() {
+            layer.open({
+                title: '心愿',
+                content: '<form id="chuxuForm" name="chuxuForm" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="number" class="col-xs-2 col-md-2 control-label">金额</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="number" name="number" placeholder="00.00">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="zhichutime" class="col-xs-2 col-md-2 control-label">时间</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="zhichutime" name="zhichutime" placeholder="选择时间">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n'+
+                    '                <label for="other" class="col-xs-2 col-md-2 control-label">备注</label>' +
+                    '                <div class="col-xs-10 col-md-10">' +
+                    '                    <textarea id="other" name="other" class="form-control" placeholder="请输入备注"></textarea>' +
+                    '                </div>' +
+                    '            </div>'+
+                    /*'            <div class="form-group">\n' +
+                    '                <div class="col-xs-10 col-md-10 col-xs-offset-2 col-md-offset-2">\n' +
+                    '                    <button type="button" class="btn btn-default">记录</button>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +*/
+                    '        </form>' +
+                    '       <div class="container">' +
+                    '           <div class="row">' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '               <div class="col-md-8 col-xs-8" id="tips" name="tips">' +
+                    '                   <p id="tip" name="tip" style="color: red"></p>' +
+                    '               </div>' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '           </div>' +
+                    '       </div>',
+                btn: ['记录'],
+                yes: function (index,layero) {
+                    $.ajax({
+                        type: "post",
+                        url: "/ssm/account/chuxuyanzheng",
+                        data: $('#chuxuForm').serialize(),
+                        success: function (data) {
+                            if (data.result == "right") {
+                                $('#tip').remove();
+                                $('#tips').html('<p id="tip" name="tip" style="color: red"></p>');
+                                $.ajax({
+                                    type: "post",
+                                    url: "/ssm/account/chuxuJiluRecord",
+                                    data: $('#chuxuForm').serialize(),
+                                    success: function (data) {
+                                        layer.msg('记录成功');
+                                        getchuxujilu();
+                                    },
+                                    error: function (e) {
+                                        layer.msg('记录失败');
+                                        console.log(e.status);
+                                        console.log(e.responseText);
+                                    }
+                                });
+                            }
+                            else if (data.result == "NozhichuTime") {
+                                // layer.msg('请选择收入时间');
+                                $('#tip').remove();
+                                $('#tips').html('<p id="tip" name="tip" style="color: red">请选择储蓄时间</p>');
+                            }
+                            else if (data.result == "Nonumber") {
+                                // layer.msg('请输入收入金额');
+                                $('#tip').remove();
+                                $('#tips').html('<p id="tip" name="tip" style="color: red">请输入储蓄金额</p>');
+                            }
+                            else if (data.result == "errornumber") {
+                                // layer.msg('请输入正确格式的收入金额');
+                                $('#tip').remove();
+                                $('#tips').html('<p id="tip" name="tip" style="color: red">请输入正确格式的储蓄金额</p>');
+                            }
+                            else {
+                                // layer.msg('其他错误');
+                                $('#tip').remove();
+                                $('#tips').html('<p id="tip" name="tip" style="color: red">其他错误</p>');
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e.status);
+                            console.log(e.responseText);
+                            // layer.msg('记录失败');
+                        }
+                    });
+                }
+            });
+            $('#zhichutime').datetimepicker({
+                bootcssVer:3,
+                autoclose:true,
+                format:'yyyy-mm-dd',
+                startView:4,
+                minView:2,
+                maxView:4,
+                language:"zh-CN",
+                //强制解析，如果输入不正规，会尽量解析成正确的格式
+                forceParse:true,
+                todayBtn:true
+            });
+        }
+    </script>
+</body>
+</html>

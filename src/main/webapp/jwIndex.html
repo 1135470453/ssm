@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>加威体育</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/account.css" rel="stylesheet">
+    <!-- 引入时间选择器 -->
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="jwIndex.html">加威体育</a>
+                </div>
+                <div id="userManageBtn" class="navbar-header navbar-right">
+                    <a class="navbar-brand" href="jwRecord.html">销售统计</a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+        </div>
+        <div class="row">
+            <center>
+                <button class="btn-lg" onclick="sale()">记账</button>
+            </center>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <strong>销售记录</strong>
+                    </div>
+                    <div class="col-xs-5 col-md-5 col-xs-offset-1 col-md-offset-1">
+                        <input id="date" name="date" type="text" placeholder="点击选择时间">
+                        <button type="button" class="btn btn-default" onclick="getSale()">查看</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>销售时间</th>
+                            <th>售价</th>
+                            <th>进价</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="recordForm">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/layer/layer.js"></script>
+    <!--时间选择器-->
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        getSale();
+        function sale() {
+            layer.open({
+                title: '销售',
+                content: '<form id="saleForm" name="saleForm" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="name" class="col-xs-2 col-md-2 control-label">名称*</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="name" name="name" placeholder="商品名称">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="sale_time" class="col-xs-2 col-md-2 control-label">时间</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="sale_time" name="sale_time" >\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="purchase" class="col-xs-2 col-md-2 control-label">进价*</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="purchase" name="purchase" placeholder="00.00">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="sale" class="col-xs-2 col-md-2 control-label">售价*</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="sale" name="sale" placeholder="00.00">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n'+
+                    '                <label for="remarks" class="col-xs-2 col-md-2 control-label">备注</label>' +
+                    '                <div class="col-xs-10 col-md-10">' +
+                    '                    <textarea id="remarks" name="remarks" class="form-control"></textarea>' +
+                    '                </div>' +
+                    '            </div>'+
+                    '        </form>' +
+                    '       <div class="container">' +
+                    '           <div class="row">' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '               <div class="col-md-8 col-xs-8" id="tips2" name="tips2">' +
+                    '                   <p id="tip2" name="tip2" style="color: red"></p>' +
+                    '               </div>' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '           </div>' +
+                    '       </div>',
+                btn: ['记录','取消'],
+                yes: function (index,layero) {
+                    $.ajax({
+                        type: "post",
+                        url: "/ssm/jwsale/verification",
+                        data: $('#saleForm').serialize(),
+                        success: function (data) {
+                            if (data.result == "right") {
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red"></p>');
+                                $.ajax({
+                                    type: "post",
+                                    url: "/ssm/jwsale/saleRecord",
+                                    data: $('#saleForm').serialize(),
+                                    success: function (data) {
+                                        layer.msg('记录成功');
+                                        getSale();
+                                        // getShouruByMonth();
+                                    },
+                                    error: function (e) {
+                                        layer.msg('记录失败');
+                                        console.log(e.status);
+                                        console.log(e.responseText);
+                                    }
+                                });
+                            } else if (data.result == "Noname") {
+                                // layer.msg('请选择收入时间');
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请输入名称</p>');
+                            } else if (data.result == "Nosale_time") {
+                                // layer.msg('请输入收入金额');
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请选择销售时间</p>');
+                            } else if (data.result == "Nopurchase") {
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请选择进价</p>');
+                            }else if (data.result == "Nosale"){
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请选择售价</p>');
+                            }
+                            else if (data.result == "errorpurchase") {
+                                // layer.msg('请输入正确格式的收入金额');
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请输入正确格式的进价</p>');
+                            } else if (data.result == "errorsale") {
+                                // layer.msg('请输入正确格式的收入金额');
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请输入正确格式的售价</p>');
+                            }else {
+                                // layer.msg('其他错误');
+                                $('#tip2').remove();
+                                $('#tips2').html('<p id="tip2" name="tip2" style="color: red">其他错误</p>');
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e.status);
+                            console.log(e.responseText);
+                            // layer.msg('记录失败');
+                        }
+                    });
+                }
+            });
+            var d = new Date();
+            var y = d.getFullYear();
+            var m = d.getMonth()+1;
+            var da = d.getDate();
+            var nowDate;
+            if (m<10){
+                nowDate = y + '-0' + m;
+            }else {
+                nowDate = y + '-' + m;
+            }
+            if (da<10){
+                nowDate = nowDate + '-0' +da;
+            }else {
+                nowDate = nowDate + '-' +da;
+            }
+            console.log(nowDate);
+            $('#sale_time').val(nowDate);
+            $('#sale_time').datetimepicker({
+                bootcssVer:3,
+                autoclose:true,
+                format:'yyyy-mm-dd',
+                startView:4,
+                minView:2,
+                maxView:4,
+                language:"zh-CN",
+                //强制解析，如果输入不正规，会尽量解析成正确的格式
+                forceParse:true,
+                todayBtn:true
+            });
+
+        };
+        function getSale(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/jwsale/getSale",
+                data: $('#date').serialize(),
+                success: function (data) {
+                    $("#recordForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#recordForm").append("<tr>" +
+                            "<td>"+item.name+"</td>"+
+                            "<td>"+item.sale_time+"</td>"+
+                            "<td>"+item.sale+"</td>" +
+                            "<td>"+item.purchase+"</td>"+
+                            "<td>"+item.remarks+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary' onclick='deleteSaleById(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function deleteSaleById(temp){
+            layer.msg('确认删除', {
+                time: 0 //不自动关闭
+                ,btn: ['确认', '取消']
+                ,yes: function(index){
+                    layer.close(index);
+                    var item = JSON.parse(decodeURI(temp));
+                    var id = item.id;
+                    $.ajax({
+                        type: "post",
+                        url: "/ssm/jwsale/deleteSaleById?id="+id,
+                        success: function (data) {
+                            getSale();
+                        },
+                        error: function (e) {
+                            console.log(e.status);
+                            console.log(e.responseText);
+                        }
+                    });
+                }
+            });
+
+        };
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = d.getMonth()+1;
+        var da = d.getDate();
+        var nowDate;
+        if (m<10){
+            nowDate = y + '-0' + m;
+        }else {
+            nowDate = y + '-' + m;
+        }
+        if (da<10){
+            nowDate = nowDate + '-0' +da;
+        }else {
+            nowDate = nowDate + '-' +da;
+        }
+        console.log(nowDate);
+        $('#date').val(nowDate);
+        $('#date').datetimepicker({
+            bootcssVer:3,
+            autoclose:true,
+            format:'yyyy-mm',
+            startView:4,
+            minView:3,
+            maxView:4,
+            language:"zh-CN",
+            //强制解析，如果输入不正规，会尽量解析成正确的格式
+            forceParse:true
+        });
+    </script>
+</body>
+</html>

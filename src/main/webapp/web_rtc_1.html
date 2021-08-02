@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>web_rtc_1</title>
+    <style>
+        video,canvas{
+            border: 1px solid gray;
+            width: 480px;
+            height: 320px;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay></video>
+    <canvas></canvas>
+    <button id="capture">Capture</button>
+    <script>
+        /*判断是否可以获得用户媒体,可以返回ture*/
+        function hasUserMedia() {
+            /*js会对非布尔类型,先将其转换为布尔类型.这里是先先转换成布尔类型取反,然后变为原值*/
+            return !!(navigator.getUserMedia)
+        }
+        if (hasUserMedia()){
+            // navigator.getUserMedia = navigator.getUserMedia;
+            var video = document.querySelector('video'),
+                canvas = document.querySelector('canvas'),
+                /*用来判断是否已经获取用户的媒体*/
+                streaming = false;
+            navigator.getUserMedia(
+                {video: true, audio: false},
+                function (stream){
+                    /*下列用法已经不兼容*/
+                 /*video.src = window.URL.createObjectURL(stream);*/
+                    /*需要使用如下用法*/
+                    try {
+                        video.srcObject = stream;
+                    } catch (error) {
+                        video.src = window.URL.createObjectURL(stream);
+                    }
+                    streaming = true;
+                },function (error) {
+                    console.log("Raised an error when capturing:",error);
+                });
+            document.querySelector('#capture').addEventListener('click',function (event) {
+                console.log("点击了capture");
+                if (streaming) {
+                        /*clientWidth为实际宽度加上边框*/
+                        canvas.width = video.clientWidth;
+                        canvas.height = video.clientHeight;
+                        /*获取画布的绘画对象,使用该对象可以在canvas上绘画*/
+                        var context = canvas.getContext('2d');
+                        context.drawImage(video,0,0,480,320);
+                    }
+            });
+        }else {
+            alert("对不起,您的浏览器不支持getUserMedia.");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<html>
+<head>
+    <script>
+        var xpos=0;
+        function move_x() {
+            obj=document.getElementById("obj");
+            obj.setAttribute("style", "position:absolute; left:" + xpos);
+            xpos+=(Math.random()-0.5)*20;
+            if (xpos > 400){
+                xpos = xpos-200;
+                setTimeout("move_x()", 1000);
+            } else if (xpos<0){
+                xpos = xpos+200;
+                setTimeout("move_x()", 1000);
+            }else {
+                setTimeout("move_x()", 1000);
+            }
+        }
+        function function1(){
+            alert("You won");
+        }
+    </script>
+    <style>
+        ul ul ul li{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>text 1</li>
+    <ul >
+        <li>text 2</li>
+        <ul><li>text 3</li><li>text 4</li><li>text 5</li></ul>
+    </ul>
+</ul>
+</body>
+</html>

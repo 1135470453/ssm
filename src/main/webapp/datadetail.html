@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>数据修改</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container" >
+        <div class="row">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html?page=1">上市公司财报展示</a>
+                </div>
+                <div class="navbar-header navbar-right">
+                    <a class="navbar-brand" href="datamanage.html">数据管理 </a>
+                </div>
+            </nav>
+        </div>
+        <div class="row" style="border-bottom: gray solid 2px;border-left: gray solid 2px;border-right: gray solid 2px;">
+            <form style="margin: 30px">
+                <div class="form-group">
+                    <label for="stock_code">股票代码</label>
+                    <input readonly="readonly" type="text" class="form-control" id="stock_code" placeholder="000001">
+                </div>
+                <div class="form-group">
+                    <label for="stock_abbre">股票简称</label>
+                    <input type="text" class="form-control" id="stock_abbre" value="平安银行" >
+                </div>
+                <div class="form-group">
+                    <label for="company_name">公司名称</label>
+                    <input type="email" class="form-control" id="company_name" value="平安银行股份有限公司">
+                </div>
+                <div class="form-group">
+                    <label for="city">省份</label>
+                    <input type="text" class="form-control" id="city" value="深圳市">
+                </div>
+                <div class="form-group">
+                    <label for="area">城市</label>
+                    <input type="email" class="form-control" id="area" value="罗湖区">
+                </div>
+                <div class="form-group">
+                    <label for="main_business_income">主营业务收入</label>
+                    <input type="text" class="form-control" id="main_business_income" value="1165.64亿">
+                </div>
+                <div class="form-group">
+                    <label for="net_profit">净利润</label>
+                    <input type="email" class="form-control" id="net_profit" value="223.98亿">
+                </div>
+                <div class="form-group">
+                    <label for="employee">员工人数</label>
+                    <input type="text" class="form-control" id="employee" value="34980">
+                </div>
+                <div class="form-group">
+                    <label for="listing_data">上市日期</label>
+                    <input type="email" class="form-control" id="listing_data" value="1991-04-03">
+                </div>
+                <div class="form-group">
+                    <label for="industry_classification">行业分类</label>
+                    <input type="text" class="form-control" id="industry_classification" value="银行">
+                </div>
+                <div class="form-group">
+                    <label for="main_business">主营业务</label>
+                    <input type="email" class="form-control" id="main_business" value="经有关监管机构批准的各项商业银行业务">
+                </div>
+                <button type="submit" class="btn btn-default">提交</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function drawTable(code) {
+            $.ajax({
+                type: "get",
+                url: "/ssm/company/?page="+page,
+                success: function (data) {
+                    $.each(data, function(i, item) {
+                        code = ( "000000" + item.stock_code ).substr( -6 );
+                        $('#company_table').append("<tr>" +
+                            "<td>"+item.serial_number+"</td>" +
+                            "<td>"+code+"</td>" +
+                            "<td>"+item.stock_abbre+"</td>" +
+                            "<td>"+item.company_name+"</td>" +
+                            "<td>"+item.city+"</td>" +
+                            "<td>"+item.area+"</td>" +
+                            "<td>"+item.main_business_income+"</td>" +
+                            "<td>"+item.net_profit+"</td>" +
+                            "<td>"+item.employee+"</td>" +
+                            "<td>"+item.listing_date+"</td>" +
+                            "<td>"+item.industry_type+"</td>" +
+                            "<td>"+item.main_business+"</td>" +
+                            "<td>" +
+                            "<button class='btn-sm' onclick='turnToPage("+code+")'>修改</button>" +
+                            "<button class='btn-sm' onclick='deleteCode("+code+")'>删除</button>" +
+                            "</td>" +
+                            "</tr>")
+                    })
+                },
+                error: function(e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function getUrlParam(name) {
+            //构造一个含有目标参数的正则表达式对象
+            var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+            //匹配目标参数
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) {
+                return unescape(r[2]);
+            } else {
+                //返回参数值
+                return "";
+            }
+        }
+    </script>
+</body>
+</html>

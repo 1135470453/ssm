@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>销售统计</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="jwIndex.html">加威体育</a>
+                </div>
+                <div id="userManageBtn" class="navbar-header navbar-right">
+                    <a class="navbar-brand" href="jwIndex.html">主页</a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="row">
+            <div id="dayP" style="width: 90%;height:400px;">
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="monthP" style="width: 90%;height:400px;">
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="yearP" style="width: 100%;height:400px;">
+
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script type="text/javascript">
+        drawDay();
+        drawMonth();
+        function drawDay() {
+            var date = [];
+            var num1 = [];
+            var num2 = [];
+            $.ajax({
+                type: "get",
+                async : false,
+                url: "/ssm/jwsale/getSaleByDay",
+                success: function (data) {
+                    console.log("succeed");
+                    $.each(data, function(i, item) {
+                        date.push(item.time);
+                        num1.push(parseInt(item.num1)-parseInt(item.num2));
+                        num2.push(item.num2);
+                    });
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+            console.log(date,num1,num2);
+            var myChart = echarts.init(document.getElementById('dayP'));
+
+            var option = {
+                title: {
+                    text: '折线图堆叠'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['销售额', '成本']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '销售额',
+                        type: 'line',
+                        stack: '总量',
+                        data: num1
+                    },
+                    {
+                        name: '成本',
+                        type: 'line',
+                        stack: '总量',
+                        data: num2
+                    }
+                ]
+            };
+            option = {
+                title: {
+                    text: '折线图堆叠'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['成本', '利润']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '成本',
+                        type: 'line',
+                        stack: '总量',
+                        data: num2
+                    },
+                    {
+                        name: '利润',
+                        type: 'line',
+                        stack: '总量',
+                        data: num1
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+        function drawMonth() {
+            var date = [];
+            var num1 = [];
+            var num2 = [];
+            $.ajax({
+                type: "get",
+                async : false,
+                url: "/ssm/jwsale/getSaleByMonth",
+                success: function (data) {
+                    console.log("succeed");
+                    $.each(data, function(i, item) {
+                        date.push(item.time);
+                        num1.push(parseInt(item.num1)-parseInt(item.num2));
+                        num2.push(item.num2);
+                    });
+                    console.log(data);
+                },
+                error: function(e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+            console.log(date,num1,num2);
+            var myChart = echarts.init(document.getElementById('monthP'));
+            var option = {
+                title: {
+                    text: '折线图堆叠'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['销售额', '成本']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '销售额',
+                        type: 'line',
+                        stack: '总量',
+                        data: num1
+                    },
+                    {
+                        name: '成本',
+                        type: 'line',
+                        stack: '总量',
+                        data: num2
+                    }
+                ]
+            };
+            option = {
+                title: {
+                    text: '折线图堆叠'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['成本', '利润']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '成本',
+                        type: 'line',
+                        stack: '总量',
+                        data: num2
+                    },
+                    {
+                        name: '利润',
+                        type: 'line',
+                        stack: '总量',
+                        data: num1
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+    </script>
+</body>
+</html>

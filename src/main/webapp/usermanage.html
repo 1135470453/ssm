@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <nav class="navbar navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html?page=1">上市公司财报展示</a>
+                </div>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="row">
+                <br>
+                <label for="ID">用户ID</label>
+                <input  type="text"  id="ID" >
+                <button  onclick="findUserById()" class="btn btn-default">搜索</button>
+                <br>
+            </div>
+            <div class="row" id="tableContainer" >
+                <table id="company_table" class="table table-hover">
+                    <tr>
+                        <th>用户ID</th>
+                        <th>用户密码</th>
+                        <th>权限</th>
+                        <th><button class="btn-sm" onclick="addUser()">新增</button></th>
+                    </tr>
+                </table>
+            </div>
+            <div class="row">
+                <nav aria-label="Page navigation" id="page_nav">
+                    <ul class="pagination" id="page_ul">
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">...</a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/layer/layer.js"></script>
+    <script>
+        drawTable();
+        function drawTable(){
+            $.ajax({
+                type: "Get",
+                url: "/ssm/webuser/getWebuser",
+                success: function (data) {
+                    $('#company_table').remove();
+                    $('#tableContainer').append("<table id=\"company_table\" class=\"table table-hover\">\n" +
+                        "                    <tr>\n" +
+                        "                        <th>用户ID</th>\n" +
+                        "                        <th>用户密码</th>\n" +
+                        "                        <th>权限</th>\n" +
+                        "                        <th><button class=\"btn-sm\" onclick=\"addUser()\">新增</button></th>\n" +
+                        "                    </tr>\n" +
+                        "                </table>")
+                    $.each(data, function(i, item) {
+                        var privilege;
+                        if (item.privilege==1){
+                            privilege='管理员';
+                        }else {
+                            privilege='用户'
+                        }
+                        $('#company_table').append("<tr>" +
+                            "<td>"+item.id+"</td>" +
+                            "<td>"+item.password+"</td>" +
+                            "<td>"+privilege+"</td>" +
+                            "<td>" +
+                            "<button class='btn-sm' onclick='updateUser("+item.id+","+item.password+")'>修改</button>" +
+                            "<button class='btn-sm' onclick='deleteUser("+item.id+")'>删除</button>" +
+                            "</td>" +
+                            "</tr>")
+                    })
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function findUserById() {
+            var id = $('#ID').val();
+            console.log(id);
+            $.ajax({
+                type: "Get",
+                url: "/ssm/webuser/getWebuserByID?id="+id,
+                success: function (data) {
+                    $('#company_table').remove();
+                    $('#tableContainer').append("<table id=\"company_table\" class=\"table table-hover\">\n" +
+                        "                    <tr>\n" +
+                        "                        <th>用户ID</th>\n" +
+                        "                        <th>用户密码</th>\n" +
+                        "                        <th>权限</th>\n" +
+                        "                        <th><button class=\"btn-sm\" onclick=\"addUser()\">新增</button></th>\n" +
+                        "                    </tr>\n" +
+                        "                </table>");
+                    $.each(data, function(i, item) {
+                        var privilege;
+                        if (item.privilege==1){
+                            privilege='管理员';
+                        }else {
+                            privilege='用户'
+                        }
+                        $('#company_table').append("<tr>" +
+                            "<td>"+item.id+"</td>" +
+                            "<td>"+item.password+"</td>" +
+                            "<td>"+privilege+"</td>" +
+                            "<td>" +
+                            "<button class='btn-sm' onclick='updateUser("+item.id+","+item.password+")'>修改</button>" +
+                            "<button class='btn-sm' onclick='deleteUser("+item.id+")'>删除</button>" +
+                            "</td>" +
+                            "</tr>")
+                    })
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function addUser() {
+            layer.open({
+                title: '新增用户',
+                content: '     <form id="registForm" name="registForm"  role="form" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="ID" class="col-xs-2 col-md-2 control-label">用户ID</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input  type="text" class="form-control" name="ID" id="ID" placeholder="请输入ID">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="password" class="col-xs-2 col-md-2 control-label">密码</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input  type="text" class="form-control" name="password" id="password" placeholder="请输入密码">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="privilege" class="col-xs-2 col-md-2 control-label">用户等级</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="privilege" name="privilege" class="form-control">\n' +
+                    '                        <option value="1">管理员</option>\n' +
+                    '                        <option value="2">用户</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '        </form>\n'+
+                    '       <div class="container">\n' +
+                    '           <div class="row">\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '               <div class="col-md-8 col-xs-8" id="tips1" name="tips1">\n' +
+                    '                   <p id="tip1" name="tip1" style="color: red"></p>\n' +
+                    '               </div>\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '           </div>\n' +
+                    '       </div>\n',
+                btn: ['确认'],
+                yes: function (index) {
+                    $(function () {
+                        var data = $('#registForm').serialize();
+                        $.ajax({
+                            type: "GET",
+                            url: "/ssm/webuser/regist",
+                            data: data,
+                            async: false,
+                            success: function (data) {
+                                console.log("request success");
+                                console.log("request data:",data);
+                                if (data.ending==="right"){
+                                    console.log("增加成功");
+                                    alert("注册成功");
+                                    drawTable();
+
+                                }else if (data.ending === "exist"){
+                                    alert("账户已存在");
+                                }else {
+                                    alert("服务器出错,请稍后再试");
+                                }
+                                layer.close(index);
+                            },
+                            error: function (e) {
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function deleteUser(id) {
+            console.log(id);
+            $.ajax({
+                type: "Post",
+                url: "/ssm/webuser/deleteUserById?id="+id,
+                success: function (data) {
+                    drawTable();
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        
+        function updateUser(id,password) {
+            layer.open({
+                title: '修改用户',
+                content: '     <form id="updataForm" name="updataForm"  role="form" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="ID" class="col-xs-2 col-md-2 control-label">用户ID</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input  type="text" class="form-control" name="ID" id="ID" value="'+id+'">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="password" class="col-xs-2 col-md-2 control-label">密码</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input  type="text" class="form-control" name="password" id="password" value="'+password+'">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="privilege" class="col-xs-2 col-md-2 control-label">用户等级</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="privilege" name="privilege" class="form-control">\n' +
+                    '                        <option value="1">管理员</option>\n' +
+                    '                        <option value="2">用户</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '        </form>\n'+
+                    '       <div class="container">\n' +
+                    '           <div class="row">\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '               <div class="col-md-8 col-xs-8" id="tips1" name="tips1">\n' +
+                    '                   <p id="tip1" name="tip1" style="color: red"></p>\n' +
+                    '               </div>\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '           </div>\n' +
+                    '       </div>\n',
+                btn: ['确认'],
+                yes: function (index) {
+                    $(function () {
+                        var data = $('#updataForm').serialize();
+                        data = $.param({'id_p':id})+'&'+data;
+                        $.ajax({
+                            type: "GET",
+                            url: "/ssm/webuser/updateUser",
+                            data: data,
+                            async: false,
+                            success: function (data) {
+                                console.log("request success");
+                                console.log("request data:",data);
+                                if (data.ending==="right"){
+                                    console.log("增加成功");
+                                    alert("修改成功");
+                                    drawTable();
+
+                                }else if (data.ending === "exist"){
+                                    alert("账户已存在");
+                                }else {
+                                    alert("服务器出错,请稍后再试");
+                                }
+                                layer.close(index);
+                            },
+                            error: function (e) {
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

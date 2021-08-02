@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>(1.1.1)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=no">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/account.css" rel="stylesheet">
+    <!-- 引入时间选择器 -->
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+</head>
+<body>
+<!--问题记录:支出等三个按钮使用弹窗的方式解决-->
+    <div class="container-fluid">
+        <div class="row">
+            <br>
+            <br>
+        </div>
+        <!--支出,收入,储蓄-->
+        <div class="row">
+            <div class="col-xs-2 col-md-2">
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <button class="btn btn-primary" type="button" onclick="zhichu()">记支出</button>
+            </div>
+            <div class="col-xs-4 col-md-4">
+                <button class="btn btn-primary" type="button" onclick="shouru()">记收入</button>
+            </div>
+<!--            <div class="col-xs-3 col-md-3">-->
+<!--                <button class="btn btn-primary" type="button" onclick="chuxu()">记储蓄</button>-->
+<!--            </div>-->
+            <div class="col-md-2 col-xs-2">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--剩余资产-->
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <strong>余额:</strong>
+                <strong id="yue" name="yue"></strong>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <strong>本月花销(储蓄):</strong>
+                <strong id="zhichu" name="zhichu"></strong>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <strong>本月收入:</strong>
+                <strong id="shouru" name="shouru"></strong>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--花销记录-->
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <strong>小白菜的花销记录</strong>
+                    </div>
+                    <div class="col-xs-5 col-md-5 col-xs-offset-1 col-md-offset-1">
+                        <input id="date1" name="date1" type="text" placeholder="点击选择时间">
+                        <button type="button" class="btn btn-default" onclick="getbaicaizhichu()">查看</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>金额</th>
+                            <th>类别</th>
+                            <th>时间</th>
+                            <th>备注</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="baicaiForm">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <input type="image" src="picture/pig.png">
+                        <strong>大猪皮的花销记录</strong>
+                    </div>
+                    <div class="col-xs-5 col-md-5 col-xs-offset-1 col-md-offset-1">
+                        <input id="date2" name="date2" type="text" placeholder="点击选择时间">
+                        <button type="button" class="btn btn-default" onclick="getpipizhichu()">查看</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>金额</th>
+                            <th>类别</th>
+                            <th>时间</th>
+                            <th>备注</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="pipiForm">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--收入记录-->
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <div class="row">
+                    <div class="col-xs-3 col-md-3">
+                        <strong>收入记录</strong>
+                    </div>
+                    <div class="col-xs-5 col-md-5 col-xs-offset-4 col-md-offset-4">
+                        选择查看时间
+                        <input id="date3" name="date3" type="text" placeholder="点击选择时间">
+                        <button type="button" class="btn btn-default" onclick="getShouruByMonth()">查看</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>金额</th>
+                            <th>类别</th>
+                            <th>来自</th>
+                            <th>时间</th>
+                            <th>备注</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="AllShouruForm">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <!--心愿储蓄-->
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <strong>我们的小心愿</strong>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1 col-md-1">
+            </div>
+            <div class="col-xs-10 col-md-10">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>心愿名称</th>
+                        <th>进度</th>
+                        <th>备注</th>
+                        <th>
+                            <input type='button' value='新建心愿' class='btn btn-primary' onclick='newChuxu()'>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="OurchuxuForm">
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-1 col-md-1">
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/layer/layer.js"></script>
+    <!--时间选择器-->
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            getAll();
+            getbaicaizhichu();
+            getpipizhichu();
+            getShouruByMonth();
+            getChuxu();
+        });
+        function zhichu() {
+           layer.open({
+               title: '支出',
+               content: '     <form id="zhichuForm" name="zhichuForm"  role="form" class="form-horizontal">\n' +
+                   '            <div class="form-group">\n' +
+                   '                <label for="number1" class="col-xs-2 col-md-2 control-label">金额</label>\n' +
+                   '                <div class="col-xs-10 col-md-10">\n' +
+                   '                    <input  type="text" class="form-control" name="number1" id="number1" placeholder="00.00">\n' +
+                   '                </div>\n' +
+                   '            </div>\n' +
+                   '            <div class="form-group">\n' +
+                   '                <label for="type1" class="col-xs-2 col-md-2 control-label">类别</label>\n' +
+                   '                <div class="col-xs-10 col-md-10">\n' +
+                   '                    <select id="type1" name="type1" class="form-control">\n' +
+                   /*支出:校园卡,交通,社交,约会,加餐,衣服,零食,彩妆,学习,运动,话费,医药,*/
+                   '                        <option value="0">校园卡</option>\n' +
+                   '                        <option value="1">交通</option>\n' +
+                   '                        <option value="2">社交</option>\n' +
+                   '                        <option value="3">约会</option>'  +
+                   '                        <option value="4">加餐</option>\n' +
+                   '                        <option value="5">衣服</option>\n' +
+                   '                        <option value="6">零食</option>\n' +
+                   '                        <option value="7">彩妆</option>\n' +
+                   '                        <option value="8">学习</option>\n' +
+                   '                        <option value="9">运动</option>\n' +
+                   '                        <option value="10">话费</option>\n' +
+                   '                        <option value="11">医药</option>\n' +
+                   '                    </select>\n' +
+                   '                </div>\n' +
+                   '            </div>\n' +
+                   '            <div class="form-group">\n' +
+                   '                <label for="person1" class="col-xs-2 col-md-2 control-label">我是</label>\n' +
+                   '                <div class="col-xs-10 col-md-10">\n' +
+                   '                    <select id="person1" name="person1"  class="form-control col-xs-10">\n' +
+                   '                        <option value="0">大猪皮</option>\n' +
+                   '                        <option value="1">小仙女</option>\n' +
+                   '                    </select>\n' +
+                   '                </div>\n' +
+                   '            </div>\n' +
+                   '            <div class="form-group">\n' +
+                   '                <label for="zhichuTime" class="col-xs-2 col-md-2 control-label">时间</label>\n' +
+                   '                <div class="col-xs-10 col-md-10">\n' +
+                   '                    <input type="text" class="form-control" id="zhichuTime" name="zhichuTime" placeholder="请选择支出时间" >\n' +
+                   '                </div>\n' +
+                   '            </div>\n' +
+                   '            <div class="form-group">\n'+
+                   '                <label for="other1" class="col-xs-2 col-md-2 control-label">备注</label>\n' +
+                   '                <div class="col-xs-10 col-md-10">\n' +
+                   '                    <textarea id="other1" name="other1"  class="form-control" placeholder="请输入备注"></textarea>\n' +
+                   '                </div>\n' +
+                   '            </div>\n'+
+                   /*'            <div class="form-group">\n' +
+                   '                <div class="col-xs-10 col-md-10 col-xs-offset-2 col-md-offset-2">\n' +
+                   '                    <button type="button" class="btn btn-default">记录</button>\n' +
+                   '                </div>\n' +
+                   '            </div>\n' +*/
+                   '        </form>\n'+
+                   '       <div class="container">\n' +
+                   '           <div class="row">\n' +
+                   '               <div class="col-md-2 col-xs-2"></div>\n' +
+                   '               <div class="col-md-8 col-xs-8" id="tips1" name="tips1">\n' +
+                   '                   <p id="tip1" name="tip1" style="color: red"></p>\n' +
+                   '               </div>\n' +
+                   '               <div class="col-md-2 col-xs-2"></div>\n' +
+                   '           </div>\n' +
+                   '       </div>\n',
+               btn: ['记录'],
+               yes: function (index) {
+                   $(function () {
+                       $.ajax({
+                           type: "post",
+                           url: "/ssm/account/zhichuyanzheng",
+                           data: $('#zhichuForm').serialize(),
+                           // dataType: 'JSON',
+                           success: function (data) {
+                               if (data.result == "right") {
+                                   $('#tip2').remove();
+                                   $('#tips2').html('<p id="tip2" name="tip2" style="color: red"></p>');
+                                   $.ajax({
+                                       type: "post",
+                                       url: "/ssm/account/zhichuRecord",
+                                       data: $('#zhichuForm').serialize(),
+                                       success: function (data) {
+                                          layer.msg('记录成功');
+                                          getAll();
+                                          getpipizhichu();
+                                          getbaicaizhichu();
+                                       },
+                                       error: function (e) {
+                                           layer.msg('记录失败');
+                                           console.log(e.status);
+                                           console.log(e.responseText);
+                                       }
+                                   });
+                                   layer.close(index);
+                               } else if (data.result == "NozhichuTime") {
+                                   $('#tip1').remove();
+                                   $('#tips1').html('<p id="tip1" name="tip1" style="color: red">请选择支出时间</p>');
+                               } else if (data.result == "Nonumber1") {
+                                   $('#tip1').remove();
+                                   $('#tips1').html('<p id="tip1" name="tip1" style="color: red">请输入支出金额</p>');
+                               } else if (data.result == "errornumber1") {
+                                   $('#tip1').remove();
+                                   $('#tips1').html('<p id="tip1" name="tip1" style="color: red">请输入正确格式支出金额</p>');
+                               } else {
+                                   $('#tip1').remove();
+                                   $('#tips1').html('<p id="tip1" name="tip1" style="color: red">其他错误</p>');
+                               }
+                           },
+                           error: function (e) {
+                               console.log(e.status);
+                               console.log(e.responseText);
+                           }
+                       });
+                   });
+               }
+           });
+            $('#zhichuTime').datetimepicker({
+                bootcssVer:3,
+                autoclose:true,
+                format:'yyyy-mm-dd',
+                startView:4,
+                minView:2,
+                maxView:4,
+                language:"zh-CN",
+                //强制解析，如果输入不正规，会尽量解析成正确的格式
+                forceParse:true,
+                todayBtn:true
+            });
+        };
+        function shouru() {
+            layer.open({
+                title: '收入',
+                content: '<form id="shouruForm" name="shouruForm" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="number2" class="col-xs-2 col-md-2 control-label">金额</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="number2" name="number2" placeholder="00.00">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="type2" class="col-xs-2 col-md-2 control-label">来源</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="type2" name="type2" class="form-control">\n' +
+                    /*收入:生活费,奖学金,兼职,理财,红包*/
+                    '                        <option value="0">生活费</option>\n' +
+                    '                        <option value="1">奖学金</option>\n' +
+                    '                        <option value="1">工资</option>\n' +
+                    '                        <option value="1">理财</option>\n' +
+                    '                        <option value="1">红包</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="person2" class="col-xs-2 col-md-2 control-label">我是</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="person2" name="person2" class="form-control col-xs-10">\n' +
+                    '                        <option value="0">大猪皮</option>\n' +
+                    '                        <option value="1">小仙女</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="shouruTime" class="col-xs-2 col-md-2 control-label">时间</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="shouruTime" name="shouruTime" >\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n'+
+                    '                <label for="other2" class="col-xs-2 col-md-2 control-label">备注</label>' +
+                    '                <div class="col-xs-10 col-md-10">' +
+                    '                    <textarea id="other2" name="other2" class="form-control" placeholder="请输入备注"></textarea>' +
+                    '                </div>' +
+                    '            </div>'+
+                    /*'            <div class="form-group">\n' +
+                    '                <div class="col-xs-10 col-md-10 col-xs-offset-2 col-md-offset-2">\n' +
+                    '                    <button type="button" class="btn btn-default">记录</button>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +*/
+                    '        </form>' +
+                    '       <div class="container">' +
+                    '           <div class="row">' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '               <div class="col-md-8 col-xs-8" id="tips2" name="tips2">' +
+                    '                   <p id="tip2" name="tip2" style="color: red"></p>' +
+                    '               </div>' +
+                    '               <div class="col-md-2 col-xs-2"></div>' +
+                    '           </div>' +
+                    '       </div>',
+                btn: ['记录'],
+                yes: function (index,layero) {
+                        $.ajax({
+                            type: "post",
+                            url: "/ssm/account/shouruyanzheng",
+                            data: $('#shouruForm').serialize(),
+                            success: function (data) {
+                                if (data.result == "right") {
+                                    $('#tip2').remove();
+                                    $('#tips2').html('<p id="tip2" name="tip2" style="color: red"></p>');
+                                    $.ajax({
+                                        type: "post",
+                                        url: "/ssm/account/shouruRecord",
+                                        data: $('#shouruForm').serialize(),
+                                        success: function (data) {
+                                            layer.msg('记录成功');
+                                            getAll();
+                                            getShouruByMonth();
+                                        },
+                                        error: function (e) {
+                                            layer.msg('记录失败');
+                                            console.log(e.status);
+                                            console.log(e.responseText);
+                                        }
+                                    });
+                                } else if (data.result == "NoshouruTime") {
+                                    // layer.msg('请选择收入时间');
+                                    $('#tip2').remove();
+                                    $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请选择收入时间</p>');
+                                } else if (data.result == "Nonumber2") {
+                                    // layer.msg('请输入收入金额');
+                                    $('#tip2').remove();
+                                    $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请输入收入金额</p>');
+                                } else if (data.result == "errornumber2") {
+                                    // layer.msg('请输入正确格式的收入金额');
+                                    $('#tip2').remove();
+                                    $('#tips2').html('<p id="tip2" name="tip2" style="color: red">请输入正确格式的收入金额</p>');
+                                } else {
+                                    // layer.msg('其他错误');
+                                    $('#tip2').remove();
+                                    $('#tips2').html('<p id="tip2" name="tip2" style="color: red">其他错误</p>');
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e.status);
+                                console.log(e.responseText);
+                                // layer.msg('记录失败');
+                            }
+                        });
+                }
+            });
+            $('#shouruTime').datetimepicker({
+                bootcssVer:3,
+                autoclose:true,
+                format:'yyyy-mm-dd',
+                startView:4,
+                minView:2,
+                maxView:4,
+                language:"zh-CN",
+                //强制解析，如果输入不正规，会尽量解析成正确的格式
+                forceParse:true,
+                todayBtn:true
+            });
+        };
+        function chuxu() {
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getChuxu",
+                success: function (data) {
+                    $("#OurchuxuForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#OurchuxuForm").append("<tr>" +
+                            "<td>"+item.name+"</td>"+
+                            "<td>"+"("+item.now+")"+item.money+"</td>"+
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary'>"+
+                            "<input type='button' value='记录' class='btn btn-primary'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+            layer.open({
+                title: '储蓄',
+                content: '<form class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="number3" class="col-xs-2 col-md-2 control-label">金额</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="number3" placeholder="还需500.00">\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="type3" class="col-xs-2 col-md-2 control-label">心愿</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="type3" class="form-control">\n' +
+                    '                        <option value="0">拍漂亮古装</option>\n' +
+                    '                        <option value="1">去成都找大猪皮</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="person3" class="col-xs-2 col-md-2 control-label">我是</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <select id="person3" class="form-control col-xs-10">\n' +
+                    '                        <option value="0">大猪皮</option>\n' +
+                    '                        <option value="1">小仙女</option>\n' +
+                    '                    </select>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="chuxuTime" class="col-xs-2 col-md-2 control-label">时间</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="chuxuTime" name="chuxuTime" >\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n'+
+                    '                <label for="other3" class="col-xs-2 col-md-2 control-label">备注</label>' +
+                    '                <div class="col-xs-10 col-md-10">' +
+                    '                    <textarea id="other3" class="form-control" placeholder="请输入备注"></textarea>' +
+                    '                </div>' +
+                    '            </div>'+
+                    /*'            <div class="form-group">\n' +
+                    '                <div class="col-xs-10 col-md-10 col-xs-offset-2 col-md-offset-2">\n' +
+                    '                    <button type="button" class="btn btn-default">记录</button>\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +*/
+                    '        </form>',
+                btn: ['记录']
+            });
+            $('#chuxuTime').datetimepicker({
+                bootcssVer:3,
+                autoclose:true,
+                format:'yyyy-mm-dd',
+                startView:4,
+                minView:2,
+                maxView:4,
+                language:"zh-CN",
+                //强制解析，如果输入不正规，会尽量解析成正确的格式
+                forceParse:true,
+                todayBtn:true
+            });
+        };
+        function newChuxu() {
+            layer.open({
+                title: '新建心愿',
+                content: '<form id="newChuxuForm" name="newChuxuForm"  role="form" class="form-horizontal">\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="name4" class="col-xs-2 col-md-2 control-label">名称</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="name4" name="name4" >\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n' +
+                    '                <label for="money4" class="col-xs-2 col-md-2 control-label">金额</label>\n' +
+                    '                <div class="col-xs-10 col-md-10">\n' +
+                    '                    <input type="text" class="form-control" id="money4" name="money4" >\n' +
+                    '                </div>\n' +
+                    '            </div>\n' +
+                    '            <div class="form-group">\n'+
+                    '                <label for="other4" class="col-xs-2 col-md-2 control-label">备注</label>' +
+                    '                <div class="col-xs-10 col-md-10">' +
+                    '                    <textarea id="other4" name="other4" class="form-control" placeholder="请输入备注"></textarea>' +
+                    '                </div>' +
+                    '            </div>'+
+                    '        </form>'+
+                    '       <div class="container">\n' +
+                    '           <div class="row">\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '               <div class="col-md-8 col-xs-8" id="tips4" name="tips4">\n' +
+                    '                   <p id="tip4" name="tip4" style="color: red"></p>\n' +
+                    '               </div>\n' +
+                    '               <div class="col-md-2 col-xs-2"></div>\n' +
+                    '           </div>\n' +
+                    '       </div>\n',
+                btn: ['新建'],
+                yes: function (index) {
+                    $(function () {
+                        $.ajax({
+                            type: "post",
+                            url: "/ssm/account/newChuxuCheck",
+                            data: $('#newChuxuForm').serialize(),
+                            success: function (data) {
+                                if (data.result == "right") {
+                                    $('#tip4').remove();
+                                    $('#tips4').html('<p id="tip4" name="tip4" style="color: red"></p>');
+                                    $.ajax({
+                                        type: "post",
+                                        url: "/ssm/account/chuxuRecord",
+                                        data: $('#newChuxuForm').serialize(),
+                                        success: function (data) {
+                                            layer.msg('新建成功');
+                                            getChuxu();
+                                        },
+                                        error: function (e) {
+                                            layer.msg('记录失败');
+                                            console.log(e.status);
+                                            console.log(e.responseText);
+                                        }
+                                    });
+                                    layer.close(index);
+                                } else if (data.result == "NoName") {
+                                    $('#tip4').remove();
+                                    $('#tips4').html('<p id="tip4" name="tip4" style="color: red">请输入心愿名称</p>');
+                                } else if (data.result == "NoMoney") {
+                                    $('#tip4').remove();
+                                    $('#tips4').html('<p id="tip4" name="tip4" style="color: red">请输入心愿金额</p>');
+                                } else if (data.result == "ErrorMoney") {
+                                    $('#tip4').remove();
+                                    $('#tips4').html('<p id="tip4" name="tip4" style="color: red">请输入正确格式心愿金额</p>');
+                                } else {
+                                    $('#tip4').remove();
+                                    $('#tips4').html('<p id="tip4" name="tip4" style="color: red">其他错误</p>');
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e.status);
+                                console.log(e.responseText);
+                            }
+                        });
+                    });
+                }
+            });
+        };
+        function chuxujilu(){
+            layer.open({
+                title: '储蓄记录',
+                content: '<table class="table table-bordered">\n' +
+                    '                    <tr>\n' +
+                    '                        <td>金额</td>\n' +
+                    '                        <td>时间</td>\n' +
+                    '                        <td></td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td>100</td>\n' +
+                    '                        <td>2020-6-12</td>\n' +
+                    '                        <td>\n' +
+                    '                            <button class="btn-default btn" type="button">删除</button>\n' +
+                    '                        </td>\n' +
+                    '                    </tr>\n' +
+                    '                    <tr>\n' +
+                    '                        <td>200</td>\n' +
+                    '                        <td>2020-7-34</td>\n' +
+                    '                        <td>\n' +
+                    '                            <button class="btn-default btn" type="button">删除</button>\n' +
+                    '                        </td>\n' +
+                    '                    </tr>\n' +
+                    '                </table>'
+            })
+        };
+        function getbaicaizhichu(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getbaicaizhichu",
+                data: $('#date1').serialize(),
+                success: function (data) {
+                    $("#baicaiForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#baicaiForm").append("<tr>" +
+                            "<td>"+item.money+"</td>"+
+                            "<td>"+item.type+"</td>"+
+                            "<td>"+item.zhichutime+"</td>"+
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary' onclick='deleteZhichuByTime(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function getChuxu(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getChuxu",
+                success: function (data) {
+                    $("#OurchuxuForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#OurchuxuForm").append("<tr>" +
+                            "<td>"+item.name+"</td>"+
+                            "<td>"+"("+item.now+")"+item.money+"</td>"+
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='详情' class='btn btn-primary' onclick='chuxuDetial(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function chuxuDetial(temp) {
+            var item = JSON.parse(decodeURI(temp));
+            var time = item.time;
+            $.ajax({
+                type: "post",
+                url: "/ssm/account/chuxuDetial?time="+time,
+                success: function (data) {
+                    window.location.href="/ssm/chuxuDetial.html";
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function getpipizhichu(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getpipizhichu",
+                data: $('#date2').serialize(),
+                success: function (data) {
+                    $("#pipiForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#pipiForm").append("<tr>" +
+                            "<td>"+item.money+"</td>"+
+                            "<td>"+item.type+"</td>"+
+                            "<td>"+item.zhichutime+"</td>" +
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary' onclick='deleteZhichuByTime(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function getShouruByMonth(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/getShouruByMonth",
+                data: $('#date3').serialize(),
+                success: function (data) {
+                    $("#AllShouruForm").empty();
+                    $.each(data, function(i, item) {
+                        var temp =encodeURI(JSON.stringify(item));
+                        $("#AllShouruForm").append("<tr>" +
+                            "<td>"+item.money+"</td>"+
+                            "<td>"+item.type+"</td>"+
+                            "<td>"+item.person+"</td>"+
+                            "<td>"+item.shourutime+"</td>"+
+                            "<td>"+item.other+"</td>"+
+                            "<td>"+
+                            "<input type='button' value='删除' class='btn btn-primary' onclick='deleteShouruByTime(\""+temp+"\")'>"+
+                            "</tr>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function getAll(){
+            $.ajax({
+                type: "get",
+                url: "/ssm/account/index",
+                success: function (data) {
+                    console.log(data.yue,data.zhichu,data.shouru);
+                    document.getElementById("yue").innerText=data.yue;
+                    document.getElementById("zhichu").innerText=data.zhichu;
+                    document.getElementById("shouru").innerText=data.shouru;
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function deleteZhichuByTime(temp){
+            var item = JSON.parse(decodeURI(temp));
+            var time = item.time;
+            $.ajax({
+                type: "post",
+                url: "/ssm/account/deleteBaicaiZhichu?time="+time,
+                success: function (data) {
+                    getbaicaizhichu();
+                    getpipizhichu();
+                    getAll();
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        function deleteShouruByTime(temp){
+            var item = JSON.parse(decodeURI(temp));
+            var time = item.time;
+            $.ajax({
+                type: "post",
+                url: "/ssm/account/deleteShouruByTime?time="+time,
+                success: function (data) {
+                    getShouruByMonth();
+                    getAll();
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        };
+        $('#date1').datetimepicker({
+            bootcssVer:3,
+            autoclose:true,
+            format:'yyyy-mm',
+            startView:4,
+            minView:3,
+            maxView:4,
+            language:"zh-CN",
+            //强制解析，如果输入不正规，会尽量解析成正确的格式
+            forceParse:true
+        });
+        $('#date2').datetimepicker({
+            bootcssVer:3,
+            autoclose:true,
+            format:'yyyy-mm',
+            startView:4,
+            minView:3,
+            maxView:4,
+            language:"zh-CN",
+            //强制解析，如果输入不正规，会尽量解析成正确的格式
+            forceParse:true
+        });
+        $('#date3').datetimepicker({
+            bootcssVer:3,
+            autoclose:true,
+            format:'yyyy-mm',
+            startView:4,
+            minView:3,
+            maxView:4,
+            language:"zh-CN",
+            //强制解析，如果输入不正规，会尽量解析成正确的格式
+            forceParse:true
+        });
+    </script>
+</body>
+</html>

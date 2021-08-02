@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>新增数据</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container" >
+    <div class="row">
+        <nav class="navbar navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">上市公司财报展示</a>
+            </div>
+            <div class="navbar-header navbar-right">
+                <a class="navbar-brand" href="datamanage.html">数据管理 </a>
+            </div>
+        </nav>
+    </div>
+    <div class="row" style="border-bottom: gray solid 2px;border-left: gray solid 2px;border-right: gray solid 2px;">
+        <form style="margin: 30px">
+            <div class="form-group">
+                <label for="stock_code">股票代码</label>
+                <input  type="text" class="form-control" id="stock_code" >
+            </div>
+            <div class="form-group">
+                <label for="stock_abbre">股票简称</label>
+                <input type="text" class="form-control" id="stock_abbre"  >
+            </div>
+            <div class="form-group">
+                <label for="company_name">公司名称</label>
+                <input type="email" class="form-control" id="company_name" >
+            </div>
+            <div class="form-group">
+                <label for="city">省份</label>
+                <input type="text" class="form-control" id="city" >
+            </div>
+            <div class="form-group">
+                <label for="area">城市</label>
+                <input type="email" class="form-control" id="area" >
+            </div>
+            <div class="form-group">
+                <label for="main_business_income">主营业务收入</label>
+                <input type="text" class="form-control" id="main_business_income" >
+            </div>
+            <div class="form-group">
+                <label for="net_profit">净利润</label>
+                <input type="email" class="form-control" id="net_profit" >
+            </div>
+            <div class="form-group">
+                <label for="employee">员工人数</label>
+                <input type="text" class="form-control" id="employee">
+            </div>
+            <div class="form-group">
+                <label for="listing_data">上市日期</label>
+                <input type="email" class="form-control" id="listing_data">
+            </div>
+            <div class="form-group">
+                <label for="industry_classification">行业分类</label>
+                <input type="text" class="form-control" id="industry_classification" >
+            </div>
+            <div class="form-group">
+                <label for="main_business">主营业务</label>
+                <input type="email" class="form-control" id="main_business" >
+            </div>
+            <button type="submit" onclick="addCode()" class="btn btn-default">新增</button>
+        </form>
+    </div>
+</div>
+<script>
+    function addCode() {
+
+    }
+</script>
+</body>
+</html>

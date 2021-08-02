@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #loginForm{
+            width: 500px;
+        }
+    </style>
+</head>
+<body >
+    <div class="container">
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-4">
+
+            </div>
+            <div class="col-sm-4 col-md-4">
+
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <form class="form-horizontal" role="form" id="loginForm" name="loginForm">
+                    <div class="form-group">
+                        <label for="ID">账号</label>
+                        <input type="text" class="form-control" id="ID" name="ID" placeholder="请输入账号">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password"  class="form-control" id="password" name="password" placeholder="请输入密码">
+                    </div>
+                    <button type="button" class="btn" onclick="login2()">登陆</button>
+                    <button type="button" class="btn" onclick="regist()">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        function login() {
+            var data = $('#loginForm').serialize();
+            console.log("data:",data);
+            $.ajax({
+                type: "GET",
+                url: "/ssm/webuser/login",
+                data: data,
+                async: false,
+                success: function (data) {
+                    console.log("request  success");
+                    console.log("request data:",data);
+                    if (data.ending==="right"){
+                        console.log("登陆成功");
+                        window.location.href = "/ssm/index.html?page=1";
+                    }else{
+                        alert("用户不存在");
+                    }
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function regist() {
+            window.location.href = "regist2.html";
+        }
+    </script>
+</body>
+</html>

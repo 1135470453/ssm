@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/123.css" rel="stylesheet">
+</head>
+<body>
+    <div class="whole">
+            <div class="wholefrom">
+                <h1>登  录</h1>
+                <div class="inputbox">
+                    <form role="form" id="loginForm" name="loginForm">
+                        <div class="input1">
+<!--                            <label for="ID">账号</label>-->
+                            <img class="icon" src="picture/zhanghu.png">
+                            <input type="text" id="ID" name="ID" placeholder="请输入账号">
+                        </div>
+                        <div class="input2">
+<!--                            <label for="password">密码</label>-->
+                            <img class="icon" src="picture/password.png">
+                            <input type="password"  id="password" name="password" placeholder="请输入密码">
+                        </div>
+                        <div class="mention">
+                            <span><input type="checkbox">下次自动登录</span>
+                            <u>忘记密码?</u>
+                        </div>
+                        <div class="btn">
+                            <button class="btn1" type="button" onclick="login()">登 录</button>
+                            <button class="btn2" type="button" onclick="regist()">注 册</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+    </div>
+
+
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        function login() {
+            var data = $('#loginForm').serialize();
+            console.log("data:",data);
+            $.ajax({
+                type: "GET",
+                url: "/ssm/webuser/login",
+                data: data,
+                async: false,
+                success: function (data) {
+                    console.log("request  success");
+                    console.log("request data:",data);
+                    if (data.ending==="right"){
+                        console.log("登陆成功");
+                        var expires = "";
+                        var date = new Date();
+                        date.setTime(date.getTime()+(1*24*60*60*1000));
+                        expires = "; expires="+date.toDateString();
+                        document.cookie = "privilege="+data.privilege+expires+"; path=/";
+                        window.location.href = "/ssm/index.html?page=1";
+                    }else{
+                        alert("用户不存在");
+                    }
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+        function regist() {
+            window.location.href = "/ssm/regist.html";
+        }
+    </script>
+</body>
+</html>

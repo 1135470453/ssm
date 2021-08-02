@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/123.css" rel="stylesheet">
+</head>
+<body>
+    <div class="whole">
+        <div class="wholefrom2">
+            <h1>注 册</h1>
+            <div class="inputbox">
+                <form role="form" id="registForm" name="registForm">
+                    <div class="input1">
+<!--                        <label for="ID">账号</label>-->
+                        <img class="icon" src="picture/zhanghu.png">
+                        <input type="text" id="ID" name="ID" placeholder="请输入账号">
+                    </div>
+                    <div class="input2">
+<!--                        <label for="password">密码</label>-->
+                        <img class="icon" src="picture/password.png">
+                        <input type="text" id="password" name="password" placeholder="请输入密码">
+                    </div>
+                    <div class="btn">
+                        <button class="btn2" type="button" onclick="register()">注册</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        function register() {
+            var data = $('#registForm').serialize();
+            console.log("data:",data);
+            $.ajax({
+                type: "GET",
+                url: "/ssm/webuser/regist",
+                data: data,
+                async: false,
+                success: function (data) {
+                    console.log("request success");
+                    console.log("request data:",data);
+                    if (data.ending==="right"){
+                        console.log("注册成功");
+                        alert("注册成功");
+                        window.location.href = "/ssm/login.html";
+                    }else if (data.ending === "exist"){
+                        alert("账户已存在");
+                    }else {
+                        alert("服务器出错,请稍后再试");
+                    }
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

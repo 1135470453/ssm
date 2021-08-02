@@ -1,0 +1,13 @@
+.container{
+    border: solid 1px;
+}
+.redpath{
+    stroke: red;
+    stroke-width: 2;
+    fill: none;
+}
+.greenpath{
+    stroke: green;
+    stroke-width: 2;
+    fill: none;
+}

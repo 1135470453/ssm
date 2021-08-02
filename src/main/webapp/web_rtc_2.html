@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>web_rtc_2</title>
+    <style>
+        body{
+            background-color: white;
+            margin-top: 15px;
+        }
+        video{
+            background: black;
+            border: 1px solid gray;
+        }
+
+        #container{
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+
+        #yours{
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        #theirs{
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <video id="yours" autoplay></video>
+        <video id="theirs" autoplay></video>
+    </div>
+    <script>
+        function hasUserMedia() {
+            return !!navigator.getUserMedia;
+        }
+        function hasRTCPeerConnection() {
+            return !!window.RTCPeerConnection;
+        }
+        var yourVideo = document.querySelector('#yours'),
+            theirVideo = document.querySelector('#theirs'),
+            yourConnection,theirConnection;
+        if (hasUserMedia()){
+            console.log("you can use your UserMedia");
+            navigator.getUserMedia({
+                video: true,
+                audio: false
+            },
+            function (stream) {
+                yourVideo.srcObject = stream;
+                if (hasRTCPeerConnection()){
+                    console.log("you can use your WebRtc");
+                    startPeerConnection(stream);
+                }else {
+                    console.log("Sorry, your browser does not support WebRTC");
+                    alert("Sorry, your browser does not support WebRTC");
+                }
+            },function (error) {
+                    console.log(error);
+                });
+        }else {
+            console.log("Sorry, your browser does not support WebRTC")
+            alert("Sorry, your browser does not support WebRTC");
+        }
+
+        function startPeerConnection(stream) {
+            console.log("startPeerConnection");
+            var configuration = {
+                'iceServers': [{ 'url': 'stun:stun.services.mozilla.com' }, { 'url': 'stun:stunserver.org' }, { 'url': 'stun:stun.l.google.com:19302' }]
+            };
+            console.log(configuration);
+            yourConnection = new RTCPeerConnection(configuration);
+            theirConnection = new RTCPeerConnection(configuration);
+
+            yourConnection.onicecandidate = function (event) {
+                if (event.candidate){
+                    theirConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+                }
+            };
+
+            theirConnection.onicecandidate = function (event) {
+                if (event.candidate){
+                    yourConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
+                }
+            };
+
+            theirConnection.onaddstream = function (e) {
+                theirVideo.srcObject = e.stream;
+            };
+            yourConnection.addStream(stream);
+            yourConnection.createOffer().then(function (offer) {
+                yourConnection.setLocalDescription(offer);
+                theirConnection.setRemoteDescription(offer);
+
+                theirConnection.createAnswer().then(function (answer) {
+                    theirConnection.setLocalDescription(answer);
+                    yourConnection.setRemoteDescription(answer);
+                });
+            });
+        };
+    </script>
+</body>
+</html>
